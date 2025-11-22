@@ -7,6 +7,8 @@ import { ArrowRight } from "lucide-react";
 import { TextReveal } from "@/components/ui/TextReveal";
 import { useRef } from "react";
 
+import { MagneticButton } from "@/components/ui/MagneticButton";
+
 export function Hero() {
     const ref = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -50,24 +52,24 @@ export function Hero() {
                     Du sol à l'âme. Une agriculture agroécologique pour des produits sains, locaux et durables.
                 </motion.p>
 
+
+                // ... inside component
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 1 }}
                     className="flex flex-col sm:flex-row gap-6 justify-center items-center"
                 >
-                    <Link
-                        href="/produits"
-                        className="group bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center gap-2 hover:scale-105 shadow-lg hover:shadow-primary/25"
-                    >
-                        Découvrir nos produits
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <Link href="/produits">
+                        <MagneticButton className="px-8 py-4 text-lg flex items-center gap-2">
+                            Découvrir nos produits
+                            <ArrowRight className="w-5 h-5" />
+                        </MagneticButton>
                     </Link>
-                    <Link
-                        href="/projet"
-                        className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 hover:scale-105"
-                    >
-                        Le Projet
+                    <Link href="/projet">
+                        <MagneticButton className="bg-white/10 hover:bg-white/20 border border-white/30 px-8 py-4 text-lg backdrop-blur-md">
+                            Le Projet
+                        </MagneticButton>
                     </Link>
                 </motion.div>
             </div>
