@@ -20,7 +20,7 @@ async function fetchGraphQL(query: string, variables = {}) {
                 query,
                 variables,
             }),
-            next: { revalidate: 60 }, // Revalidate every 60 seconds
+            next: { revalidate: 60 },
         });
 
         if (!response.ok) {
@@ -41,27 +41,44 @@ async function fetchGraphQL(query: string, variables = {}) {
     }
 }
 
+// Strip HTML tags from text
+function stripHtml(html: string): string {
+    if (!html) return "";
+    return html.replace(/<[^>]*>/g, "").trim();
+}
+
 // Transform WooCommerce product to our Product type
 function transformProduct(wooProduct: any): Product {
+    console.log("Transforming product:", wooProduct.name);
+
     // Get CBD and THC content from attributes
     const attributes = wooProduct.attributes?.nodes || [];
     const cbdAttr = attributes.find((attr: any) => attr.name.toLowerCase().includes("cbd"));
     const thcAttr = attributes.find((attr: any) => attr.name.toLowerCase().includes("thc"));
     const originAttr = attributes.find((attr: any) => attr.name.toLowerCase().includes("origin"));
 
+    // Parse price - WooCommerce returns price as string like "49.00"
+    let price = 0;
+    if (wooProduct.price) {
+        const priceStr = wooProduct.price.toString().replace(/[^0-9.]/g, "");
+        price = parseFloat(priceStr) || 0;
+    }
+
+    console.log("Price parsed:", price, "from", wooProduct.price);
+
     return {
         id: wooProduct.databaseId.toString(),
         name: wooProduct.name,
         slug: wooProduct.slug,
-        price: parseFloat(wooProduct.price?.replace(/[^0-9.]/g, "") || "0"),
-        description: wooProduct.description || "",
-        shortDescription: wooProduct.shortDescription || "",
+        price: price,
+        description: stripHtml(wooProduct.description || ""),
+        shortDescription: stripHtml(wooProduct.shortDescription || ""),
         images: [wooProduct.image?.sourceUrl || "/images/product-placeholder.jpg"],
         origin: originAttr?.options?.[0] || "Béarn",
         category: wooProduct.productCategories?.nodes?.[0]?.name || "Produits",
         stock: wooProduct.stockQuantity || 0,
-        thcContent: parseFloat(thcAttr?.options?.[0] || "0"),
-        cbdContent: parseFloat(cbdAttr?.options?.[0] || "0"),
+        thcContent: parseFloat(thcAttr?.options?.[0]?.replace(/[^0-9.]/g, "") || "0"),
+        cbdContent: parseFloat(cbdAttr?.options?.[0]?.replace(/[^0-9.]/g, "") || "0"),
     };
 }
 
@@ -70,10 +87,11 @@ export async function getProducts(): Promise<Product[]> {
     const data = await fetchGraphQL(GET_PRODUCTS, { first: 50 });
 
     if (!data || !data.products) {
-        // Return mock data if WordPress is not available
+        console.log("No WordPress data, using mock products");
         return getMockProducts();
     }
 
+    console.log("Got products from WordPress:", data.products.nodes.length);
     return data.products.nodes.map(transformProduct);
 }
 
@@ -82,7 +100,7 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
     const data = await fetchGraphQL(GET_PRODUCT_BY_SLUG, { slug });
 
     if (!data || !data.product) {
-        // Return mock data if WordPress is not available
+        console.log(`No WordPress data for slug: ${slug}, using mock products`);
         const mockProducts = getMockProducts();
         return mockProducts.find((p) => p.slug === slug);
     }
@@ -90,7 +108,7 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
     return transformProduct(data.product);
 }
 
-// Mock data fallback (same as before)
+// Mock data fallback
 function getMockProducts(): Product[] {
     return [
         {
