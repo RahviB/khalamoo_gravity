@@ -1,12 +1,10 @@
 "use client";
-"use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ShoppingBag, ArrowUpRight } from "lucide-react";
 import { Product } from "@/types/product";
-import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
@@ -27,6 +25,8 @@ export function ProductCard({ product }: ProductCardProps) {
         });
     };
 
+    const isOnSale = product.salePrice && product.regularPrice && product.salePrice < product.regularPrice;
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -38,6 +38,13 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-primary border border-primary/20 shadow-sm">
                 {product.origin}
             </div>
+
+            {/* Sale Badge */}
+            {isOnSale && (
+                <div className="absolute top-4 right-4 z-20 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest shadow-lg">
+                    Promo
+                </div>
+            )}
 
             {/* Image Container */}
             <div className="relative aspect-[4/5] overflow-hidden bg-beige-light">
@@ -71,9 +78,22 @@ export function ProductCard({ product }: ProductCardProps) {
                     <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-1">
                         {product.name}
                     </h3>
-                    <span className="font-medium text-primary-dark">
-                        {product.price.toFixed(2)}€
-                    </span>
+                    <div className="flex flex-col items-end gap-1">
+                        {isOnSale ? (
+                            <>
+                                <span className="text-xs text-foreground/40 line-through">
+                                    {product.regularPrice!.toFixed(2)}€
+                                </span>
+                                <span className="font-bold text-lg text-red-600">
+                                    {product.salePrice!.toFixed(2)}€
+                                </span>
+                            </>
+                        ) : (
+                            <span className="font-medium text-primary-dark">
+                                {product.price.toFixed(2)}€
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 <p className="text-sm text-foreground/60 mb-4 line-clamp-2 min-h-[2.5em]">

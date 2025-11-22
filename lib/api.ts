@@ -50,6 +50,11 @@ function stripHtml(html: string): string {
 // Transform WooCommerce product to our Product type
 function transformProduct(wooProduct: any): Product {
     console.log("Transforming product:", wooProduct.name);
+    console.log("Raw price data:", {
+        price: wooProduct.price,
+        regularPrice: wooProduct.regularPrice,
+        salePrice: wooProduct.salePrice
+    });
 
     // Get CBD and THC content from attributes
     const attributes = wooProduct.attributes?.nodes || [];
@@ -57,20 +62,28 @@ function transformProduct(wooProduct: any): Product {
     const thcAttr = attributes.find((attr: any) => attr.name.toLowerCase().includes("thc"));
     const originAttr = attributes.find((attr: any) => attr.name.toLowerCase().includes("origin"));
 
-    // Parse price - WooCommerce returns price as string like "49.00"
-    let price = 0;
-    if (wooProduct.price) {
-        const priceStr = wooProduct.price.toString().replace(/[^0-9.]/g, "");
-        price = parseFloat(priceStr) || 0;
-    }
+    // Helper to parse price value
+    const parsePrice = (priceValue: any): number => {
+        if (!priceValue) return 0;
+        const priceStr = priceValue.toString().replace(/[^0-9.]/g, "");
+        const parsedPrice = parseFloat(priceStr);
+        // If price is > 1000, it's likely in cents (e.g., 2000 = 20.00€)
+        return parsedPrice > 1000 ? parsedPrice / 100 : parsedPrice;
+    };
 
-    console.log("Price parsed:", price, "from", wooProduct.price);
+    const regularPrice = parsePrice(wooProduct.regularPrice);
+    const salePrice = parsePrice(wooProduct.salePrice);
+    const currentPrice = salePrice || parsePrice(wooProduct.price) || regularPrice;
+
+    console.log("Parsed prices:", { regularPrice, salePrice, currentPrice });
 
     return {
         id: wooProduct.databaseId.toString(),
         name: wooProduct.name,
         slug: wooProduct.slug,
-        price: price,
+        price: currentPrice,
+        regularPrice: regularPrice || undefined,
+        salePrice: salePrice || undefined,
         description: stripHtml(wooProduct.description || ""),
         shortDescription: stripHtml(wooProduct.shortDescription || ""),
         images: [wooProduct.image?.sourceUrl || "/images/product-placeholder.jpg"],

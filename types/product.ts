@@ -2,7 +2,9 @@ export interface Product {
     id: string;
     name: string;
     slug: string;
-    price: number;
+    price: number; // Current price (sale price if on sale, otherwise regular price)
+    regularPrice?: number; // Original price before discount
+    salePrice?: number; // Discounted price if on sale
     description: string;
     shortDescription: string;
     images: string[];

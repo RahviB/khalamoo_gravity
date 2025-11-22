@@ -5,8 +5,13 @@ import { Section } from "@/components/ui/Section";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { Check } from "lucide-react";
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-    const product = await getProductBySlug(params.slug);
+export default async function ProductDetailPage({
+    params
+}: {
+    params: Promise<{ slug: string }>
+}) {
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
 
     if (!product) {
         notFound();
