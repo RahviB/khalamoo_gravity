@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X, ShoppingBag, User } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 
@@ -55,6 +55,15 @@ export function Header() {
 
                         {/* Cart & Mobile Menu Toggle */}
                         <div className="flex items-center gap-4">
+                            {/* My Account Link */}
+                            <a
+                                href="https://shop.khalamoo.fr/mon-compte/"
+                                className="p-2 hover:bg-beige-light rounded-full transition-colors hidden md:block"
+                                title="Mon Compte"
+                            >
+                                <User className="w-6 h-6 text-foreground" />
+                            </a>
+
                             {/* Cart Button */}
                             <button
                                 onClick={openCart}
@@ -91,6 +100,12 @@ export function Header() {
                                     {link.label}
                                 </Link>
                             ))}
+                            <a
+                                href="https://shop.khalamoo.fr/mon-compte/"
+                                className="block py-3 text-foreground/80 hover:text-primary font-medium transition-colors border-t border-border/50 mt-2 pt-4"
+                            >
+                                Mon Compte
+                            </a>
                         </nav>
                     )}
                 </div>
