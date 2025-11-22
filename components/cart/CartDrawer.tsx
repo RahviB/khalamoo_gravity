@@ -10,13 +10,9 @@ export function CartDrawer() {
     const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart } = useCart();
 
     const handleCheckout = () => {
-        // Build WooCommerce checkout URL with cart items
-        const params = new URLSearchParams();
-        cart.items.forEach((item) => {
-            params.append("add-to-cart", item.productId);
-            params.append("quantity", item.quantity.toString());
-        });
-        window.location.href = `https://shop.khalamoo.fr/checkout/?${params.toString()}`;
+        // Redirect to WooCommerce cart page
+        // User will see their cart and can proceed to checkout from there
+        window.location.href = "https://shop.khalamoo.fr/panier/";
     };
 
     return (
@@ -139,7 +135,7 @@ export function CartDrawer() {
                                     onClick={handleCheckout}
                                     className="block w-full bg-primary hover:bg-primary-dark text-white text-center py-4 rounded-full font-bold transition-colors"
                                 >
-                                    Passer commande
+                                    Voir le panier
                                 </button>
                                 <button
                                     onClick={closeCart}
