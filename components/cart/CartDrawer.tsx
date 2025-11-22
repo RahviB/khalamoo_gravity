@@ -119,25 +119,6 @@ export function CartDrawer() {
                         {/* Footer */}
                         {cart.items.length > 0 && (
                             <div className="border-t border-border/50 p-6 bg-beige-light/30">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="text-lg font-medium">Total</span>
-                                    <span className="text-2xl font-serif font-bold text-primary">
-                                        {cart.total.toFixed(2)}€
-                                    </span>
-                                </div>
-                                <Link
-                                    href="/checkout"
-                                    onClick={closeCart}
-                                    className="block w-full bg-primary hover:bg-primary-dark text-white text-center py-4 rounded-full font-bold transition-colors"
-                                >
-                                    Commander
-                                </Link>
-                                <button
-                                    onClick={closeCart}
-                                    className="block w-full mt-3 text-foreground/60 hover:text-foreground text-center py-2 font-medium transition-colors"
-                                >
-                                    Continuer mes achats
-                                </button>
                             </div>
                         )}
                     </motion.div>
