@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/contexts/CartContext";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} ${merriweather.variable}`}>
       <body>
+        <SmoothScroll />
         <CartProvider>
           <Header />
           <main className="min-h-screen">{children}</main>
