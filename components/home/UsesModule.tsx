@@ -63,18 +63,26 @@ export function UsesModule() {
                                 key={use.id}
                                 onClick={() => setActiveUse(use)}
                                 className={cn(
-                                    "w-full text-left p-6 rounded-xl transition-all duration-300 flex items-center gap-6 border-2",
-                                    activeUse.id === use.id
-                                        ? "border-primary bg-white shadow-lg scale-105"
-                                        : "border-transparent bg-white/50 hover:bg-white hover:shadow-md"
+                                    "relative w-full text-left p-6 rounded-xl transition-all duration-300 group",
+                                    activeUse.id !== use.id && "hover:bg-white/50"
                                 )}
                             >
-                                <div className={cn("p-4 rounded-full", use.color)}>
-                                    <use.icon className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-foreground">{use.title}</h3>
-                                    <p className="text-foreground/60">{use.description}</p>
+                                {activeUse.id === use.id && (
+                                    <motion.div
+                                        layoutId="activeBackground"
+                                        className="absolute inset-0 bg-white shadow-lg rounded-xl border-2 border-primary"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                    />
+                                )}
+                                <div className="relative z-10 flex items-center gap-6">
+                                    <div className={cn("p-4 rounded-full transition-colors", use.color)}>
+                                        <use.icon className="w-6 h-6" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-foreground">{use.title}</h3>
+                                        <p className="text-foreground/60">{use.description}</p>
+                                    </div>
                                 </div>
                             </button>
                         ))}
@@ -82,19 +90,35 @@ export function UsesModule() {
 
                     {/* Display Area */}
                     <div className="relative h-[400px] bg-white rounded-2xl shadow-xl overflow-hidden p-8 flex items-center justify-center text-center">
+                        {/* Animated Background Blob */}
+                        <motion.div
+                            key={activeUse.id + "-bg"}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.2 }}
+                            transition={{ duration: 0.5 }}
+                            className={cn("absolute inset-0 opacity-20", activeUse.color.split(" ")[0])}
+                            style={{ borderRadius: "50%", filter: "blur(60px)", transform: "scale(1.5)" }}
+                        />
+
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeUse.id}
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
-                                className="space-y-6"
+                                className="relative z-10 space-y-6 max-w-md"
                             >
-                                <div className={cn("w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6", activeUse.color)}>
-                                    <activeUse.icon className="w-12 h-12" />
-                                </div>
-                                <h3 className="text-3xl font-serif font-bold text-primary-dark">
+                                <motion.div
+                                    initial={{ scale: 0, rotate: -180 }}
+                                    animate={{ scale: 1, rotate: 0 }}
+                                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                                    className={cn("w-32 h-32 mx-auto rounded-full flex items-center justify-center mb-6 shadow-inner", activeUse.color)}
+                                >
+                                    <activeUse.icon className="w-16 h-16" />
+                                </motion.div>
+                                <h3 className="text-4xl font-serif font-bold text-primary-dark">
                                     {activeUse.title}
                                 </h3>
                                 <p className="text-xl text-foreground/80 leading-relaxed">

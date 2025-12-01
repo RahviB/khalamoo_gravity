@@ -5,14 +5,16 @@ import { X, Minus, Plus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { redirectToWooCommerceCheckout } from "@/lib/woocommerce";
 
 export function CartDrawer() {
     const { cart, isCartOpen, closeCart, updateQuantity, removeFromCart } = useCart();
 
+
+
     const handleCheckout = () => {
-        // Redirect to WooCommerce cart page
-        // User will see their cart and can proceed to checkout from there
-        window.location.href = "https://shop.khalamoo.fr/panier/";
+        // Redirect to WooCommerce checkout with cart items
+        redirectToWooCommerceCheckout(cart.items);
     };
 
     return (

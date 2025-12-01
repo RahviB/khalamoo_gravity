@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
-import { Check } from "lucide-react";
+import { Check, MapPin, Leaf, Info } from "lucide-react";
+import { Accordion } from "@/components/ui/Accordion";
 
 export default async function ProductDetailPage({
     params
@@ -31,8 +32,15 @@ export default async function ProductDetailPage({
                             priority
                         />
                         {/* Origin Stamp */}
-                        <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold uppercase tracking-widest text-primary border border-primary/20 shadow-sm">
-                            {product.origin}
+                        {/* Origin Stamp */}
+                        <div className="absolute top-6 left-6 bg-white/95 backdrop-blur-md px-4 py-3 rounded-2xl text-sm font-bold text-primary border border-primary/20 shadow-lg flex items-center gap-3">
+                            <div className="bg-primary/10 p-2 rounded-full">
+                                <MapPin className="w-5 h-5 text-primary" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-xs text-foreground/60 uppercase tracking-wider font-medium">Origine</span>
+                                <span className="font-serif text-lg leading-none">{product.origin}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -88,6 +96,51 @@ export default async function ProductDetailPage({
                                     </span>
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Composition & Details Accordion */}
+                        <div className="mb-8">
+                            <Accordion
+                                items={[
+                                    {
+                                        title: "Profil Terpénique",
+                                        content: (
+                                            <div className="space-y-2">
+                                                <p>Une richesse aromatique unique issue de notre terroir béarnais.</p>
+                                                <ul className="list-disc list-inside space-y-1 text-sm">
+                                                    <li>Myrcène (Terreux, Musqué)</li>
+                                                    <li>Caryophyllène (Épicé, Poivré)</li>
+                                                    <li>Limonène (Agrumes, Frais)</li>
+                                                </ul>
+                                            </div>
+                                        ),
+                                    },
+                                    {
+                                        title: "Conseils d'Utilisation",
+                                        content: (
+                                            <p>
+                                                À infuser dans un corps gras (lait, huile) pour une assimilation optimale des cannabinoïdes.
+                                                Commencer par de petites quantités et ajuster selon vos besoins.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        title: "Certifications",
+                                        content: (
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-2">
+                                                    <Leaf className="w-4 h-4 text-green-600" />
+                                                    <span>Agriculture Biologique (En conversion)</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Info className="w-4 h-4 text-blue-600" />
+                                                    <span>Analyses Laboratoire Disponibles</span>
+                                                </div>
+                                            </div>
+                                        ),
+                                    },
+                                ]}
+                            />
                         </div>
 
                         {/* Add to Cart */}

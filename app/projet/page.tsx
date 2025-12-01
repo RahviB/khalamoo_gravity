@@ -1,6 +1,7 @@
 import { Section } from "@/components/ui/Section";
 import { Roadmap } from "@/components/home/Roadmap";
 import { Handshake, Users, Building } from "lucide-react";
+import { PartnershipForm } from "@/components/project/PartnershipForm";
 
 export default function ProjectPage() {
     return (
@@ -65,18 +66,9 @@ export default function ProjectPage() {
                 <Roadmap />
             </div>
 
-            {/* CTA */}
-            <Section className="bg-secondary-dark text-white text-center">
-                <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6">Envie de rejoindre l'aventure ?</h2>
-                <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-                    Que vous soyez agriculteur, artisan ou simplement curieux, contactez-nous pour échanger sur les opportunités de collaboration.
-                </p>
-                <a
-                    href="/contact"
-                    className="inline-block bg-white text-secondary-dark px-8 py-4 rounded-full font-bold hover:bg-beige-light transition-colors"
-                >
-                    Nous Contacter
-                </a>
+            {/* Partnership Form */}
+            <Section className="bg-beige-light/50" id="contact">
+                <PartnershipForm />
             </Section>
         </div>
     );
